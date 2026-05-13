@@ -83,6 +83,35 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .bulb { animation: none; }
 }
+@media (max-height: 520px) and (orientation: landscape) {
+  .app-shell { min-height: 100dvh; }
+  .app-sidebar {
+    width: 280px !important;
+    height: 100dvh !important;
+    padding: 12px !important;
+    gap: 12px !important;
+    overflow-y: auto;
+  }
+  .app-main { height: auto !important; }
+  .app-main > header {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+  }
+  .app-board {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 8px !important;
+  }
+  .app-bottom {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 12px !important;
+    padding-bottom: 16px !important;
+    gap: 16px !important;
+  }
+}
 /* hide scrollbar in call history strip */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }

@@ -78,7 +78,7 @@ export function Sidebar(props: SidebarProps) {
     onReset();
   }, [onReset, shuffleControls]);
   return (
-    <aside className="w-[340px] shrink-0 h-screen p-5 flex flex-col gap-4 border-r border-white/5 bg-black/30 backdrop-blur-md">
+    <aside className="app-sidebar w-[340px] shrink-0 h-screen p-5 flex flex-col gap-4 border-r border-white/5 bg-black/30 backdrop-blur-md">
       <Logo size="md" />
 
       {/* Stats */}

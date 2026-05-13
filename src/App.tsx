@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from './components/Sidebar';
 import { MainBoard } from './components/MainBoard';
@@ -17,38 +17,40 @@ export function App() {
   const [autoInterval, setAutoInterval] = useState(5);
   const [winnerOpen, setWinnerOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const playWinnerSound = useCallback(() => {
-    const AudioContextImpl =
-      window.AudioContext ||
-      (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextImpl) return;
-    const ctx = new AudioContextImpl();
-    const master = ctx.createGain();
-    master.gain.value = 0.05;
-    master.connect(ctx.destination);
-    const now = ctx.currentTime;
-    const notes = [523.25, 659.25, 783.99, 1046.5];
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.0001, now + i * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.25, now + i * 0.08 + 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.4);
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, now + i * 0.08);
-      osc.connect(gain);
-      gain.connect(master);
-      osc.start(now + i * 0.08);
-      osc.stop(now + i * 0.08 + 0.45);
-    });
-    window.setTimeout(() => {
-      ctx.close().catch(() => undefined);
-    }, 1200);
+  const winnerAudioRef = useRef<{ claps?: HTMLAudioElement; cheer?: HTMLAudioElement }>({});
+  const playWinnerSounds = useCallback(() => {
+    const claps = winnerAudioRef.current.claps ??
+      new Audio('/hitslab-clapping-typography-video-music-460582.mp3');
+    const cheer = winnerAudioRef.current.cheer ??
+      new Audio('/hitslab-cheerful-whistle-cute-music-337621.mp3');
+    claps.volume = 0.7;
+    cheer.volume = 0.6;
+    claps.loop = true;
+    cheer.loop = true;
+    winnerAudioRef.current = { claps, cheer };
+    claps.currentTime = 0;
+    cheer.currentTime = 0;
+    claps.play().catch(() => undefined);
+    cheer.play().catch(() => undefined);
   }, []);
+  const stopWinnerSounds = useCallback(() => {
+    const { claps, cheer } = winnerAudioRef.current;
+    claps?.pause();
+    cheer?.pause();
+    if (claps) claps.currentTime = 0;
+    if (cheer) cheer.currentTime = 0;
+  }, []);
+  useEffect(() => {
+    if (!soundOn) stopWinnerSounds();
+  }, [soundOn, stopWinnerSounds]);
   const handleOpenWinner = useCallback(() => {
-    playWinnerSound();
+    if (soundOn) playWinnerSounds();
     setWinnerOpen(true);
-  }, [playWinnerSound]);
+  }, [playWinnerSounds, soundOn]);
+  const handleCloseWinner = useCallback(() => {
+    stopWinnerSounds();
+    setWinnerOpen(false);
+  }, [stopWinnerSounds]);
   useCallEffects(game.current, soundOn);
   useAutoPlay(
     autoPlay && game.started && !game.complete,
@@ -70,7 +72,7 @@ export function App() {
     onFullscreen: handleFullscreen
   });
   return (
-    <div className="flex w-full min-h-screen bg-brand-bg text-white">
+    <div className="app-shell flex w-full min-h-screen bg-brand-bg text-white">
       <Sidebar
         count={game.count}
         previous={game.previous}
@@ -93,7 +95,7 @@ export function App() {
         onFullscreen={handleFullscreen} />
       
 
-      <main className="flex-1 min-w-0 h-screen overflow-auto flex flex-col">
+      <main className="app-main flex-1 min-w-0 h-screen overflow-auto flex flex-col">
         {/* Top status bar */}
         <header className="flex items-center justify-between px-8 pt-6 pb-2">
           <div className="flex items-center gap-3">
@@ -129,12 +131,12 @@ export function App() {
         </header>
 
         {/* Main board */}
-        <div className="px-8 pt-4">
+        <div className="app-board px-8 pt-4">
           <MainBoard calledSet={game.calledSet} current={game.current} />
         </div>
 
         {/* Bottom section */}
-        <div className="px-8 pb-8 pt-6 mt-auto grid grid-cols-12 gap-8 items-center">
+        <div className="app-bottom px-8 pb-8 pt-6 mt-auto grid grid-cols-12 gap-8 items-center">
           <div className="col-span-4">
             <CurrentBall current={game.current} />
           </div>
@@ -278,7 +280,7 @@ export function App() {
           exit={{
             opacity: 0
           }}
-          onClick={() => setWinnerOpen(false)}>
+          onClick={handleCloseWinner}>
 
           <WinnerCelebration />
 
@@ -311,7 +313,7 @@ export function App() {
               <BulbRing />
               <button
                 type="button"
-                onClick={() => setWinnerOpen(false)}
+                onClick={handleCloseWinner}
                 aria-label="Close winner modal"
                 className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full border border-yellow-200/40 text-yellow-100/90 hover:text-white hover:border-yellow-200 bg-black/10 flex items-center justify-center">
                 ×
