@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useCallback, useMemo, useState } from 'react';
+import { motion, useAnimationControls } from 'framer-motion';
 import {
   PlayIcon,
   SkipForwardIcon,
@@ -25,6 +25,7 @@ interface SidebarProps {
   onStart: () => void;
   onNext: () => void;
   onReset: () => void;
+  onOpenWinner: () => void;
   onToggleSound: () => void;
   onToggleAutoPlay: () => void;
   onSetAutoInterval: (s: number) => void;
@@ -43,11 +44,39 @@ export function Sidebar(props: SidebarProps) {
     onStart,
     onNext,
     onReset,
+    onOpenWinner,
     onToggleSound,
     onToggleAutoPlay,
     onSetAutoInterval,
     onFullscreen
   } = props;
+  const emptyCalledSet = useMemo(() => new Set<number>(), []);
+  const [patternSet, setPatternSet] = useState<Set<number>>(() => new Set());
+  const shuffleControls = useAnimationControls();
+  const handleTogglePatternCell = useCallback((index: number) => {
+    setPatternSet((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  }, []);
+  const handleClearPattern = useCallback(() => {
+    setPatternSet(new Set());
+  }, []);
+  const handleResetClick = useCallback(() => {
+    shuffleControls.start({
+      rotate: [0, -2, 2, 0],
+      y: [0, -2, 0],
+      transition: {
+        duration: 0.35
+      }
+    });
+    onReset();
+  }, [onReset, shuffleControls]);
   return (
     <aside className="w-[340px] shrink-0 h-screen p-5 flex flex-col gap-4 border-r border-white/5 bg-black/30 backdrop-blur-md">
       <Logo size="md" />
@@ -75,13 +104,27 @@ export function Sidebar(props: SidebarProps) {
 
       {/* Mini preview card */}
       <div>
-        <div className="flex items-center justify-between mb-2 px-1">
+        <div className="flex items-center justify-between mb-1 px-1">
           <span className="text-[10px] uppercase tracking-[0.3em] text-white/40">
             Preview Card
           </span>
-          <span className="text-[10px] text-white/30">5 × 5</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-white/30">5 x 5</span>
+            <button
+              type="button"
+              onClick={handleClearPattern}
+              className="text-[10px] uppercase tracking-[0.25em] text-white/45 hover:text-white/80">
+              Clear
+            </button>
+          </div>
         </div>
-        <MiniCard calledSet={calledSet} />
+        <div className="text-[10px] uppercase tracking-[0.28em] text-white/25 px-1 mb-2">
+          Click squares to set pattern
+        </div>
+        <MiniCard
+          calledSet={started ? emptyCalledSet : calledSet}
+          patternSet={patternSet}
+          onTogglePatternCell={handleTogglePatternCell} />
       </div>
 
       {/* Primary controls */}
@@ -127,7 +170,8 @@ export function Sidebar(props: SidebarProps) {
           whileTap={{
             scale: 0.98
           }}
-          onClick={onReset}
+          animate={shuffleControls}
+          onClick={handleResetClick}
           className="flex items-center justify-center gap-2 h-12 rounded-2xl bg-brand-red/15 hover:bg-brand-red/25 border border-brand-red/40 text-brand-red font-medium tracking-wide">
           
           <RotateCcwIcon className="w-4 h-4" />
@@ -135,6 +179,18 @@ export function Sidebar(props: SidebarProps) {
           <span className="ml-1 text-[10px] uppercase tracking-widest opacity-70">
             R
           </span>
+        </motion.button>
+
+        <motion.button
+          whileHover={{
+            y: -1
+          }}
+          whileTap={{
+            scale: 0.98
+          }}
+          onClick={onOpenWinner}
+          className="flex items-center justify-center gap-2 h-11 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/75 font-medium tracking-wide">
+          Winner Modal
         </motion.button>
       </div>
 

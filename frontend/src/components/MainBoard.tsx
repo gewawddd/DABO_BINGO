@@ -67,6 +67,7 @@ interface NumberCellProps {
   accent: 'blue' | 'red';
 }
 function NumberCell({ n, called, current }: NumberCellProps) {
+  const blinkStyle = { '--blink-delay': `${(n % 7) * 0.12}s` } as React.CSSProperties;
   return (
     <div className="relative aspect-square">
       <AnimatePresence>
@@ -86,8 +87,9 @@ function NumberCell({ n, called, current }: NumberCellProps) {
             stiffness: 380,
             damping: 22
           }}
+          style={blinkStyle}
           className={[
-          'absolute inset-0 rounded-xl flex items-center justify-center font-display font-bold text-xl',
+          'absolute inset-0 rounded-xl flex items-center justify-center font-display font-bold text-xl blink-soft',
           current ?
           'bg-brand-red/20 text-white shadow-glow-red ring-2 ring-brand-red' :
           'bg-brand-blue/20 text-white shadow-glow-blue'].
@@ -111,7 +113,9 @@ function NumberCell({ n, called, current }: NumberCellProps) {
         }
       </AnimatePresence>
       {!called &&
-      <div className="absolute inset-0 rounded-xl bg-white/[0.025] border border-white/10 flex items-center justify-center font-display font-semibold text-base text-white/35">
+      <div
+        style={blinkStyle}
+        className="absolute inset-0 rounded-xl bg-white/[0.025] border border-white/10 flex items-center justify-center font-display font-semibold text-base text-white/35 blink-soft">
           {n}
         </div>
       }

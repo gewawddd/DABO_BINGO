@@ -3,14 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getLetterForNumber, LETTER_COLOR } from '../utils/trbsa';
 interface CallHistoryProps {
   drawn: number[];
+  onOpenHistory?: () => void;
 }
-export function CallHistory({ drawn }: CallHistoryProps) {
+export function CallHistory({ drawn, onOpenHistory }: CallHistoryProps) {
   // most recent first, exclude the current (last) call
   const history = drawn.slice(0, -1).slice(-12).reverse();
+  const hasHistory = drawn.length > 0;
   return (
     <div className="flex flex-col gap-2">
-      <div className="text-[10px] uppercase tracking-[0.35em] text-white/40 px-1">
-        Recent Calls
+      <div className="flex items-center justify-between px-1">
+        <div className="text-[10px] uppercase tracking-[0.35em] text-white/40">
+          Recent Calls
+        </div>
+        <button
+          type="button"
+          onClick={onOpenHistory}
+          disabled={!hasHistory}
+          className="text-[10px] uppercase tracking-[0.3em] text-white/45 hover:text-white/80 disabled:text-white/20">
+          History
+        </button>
       </div>
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
         <AnimatePresence initial={false}>
