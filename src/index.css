@@ -55,6 +55,12 @@ body {
     0 0 22px rgba(239, 68, 68, 0.65),
     0 0 56px rgba(239, 68, 68, 0.45);
 }
+.card-cell-blue {
+  text-shadow: 0 0 10px rgba(14, 165, 233, 0.25);
+}
+.card-cell-red {
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+}
 @keyframes softBlink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
@@ -115,3 +121,78 @@ body {
 /* hide scrollbar in call history strip */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+.print-hide { display: block; }
+.print-card { box-shadow: none; }
+.print-page { break-after: auto; }
+.print-batch-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+@media print {
+  @page {
+    size: legal;
+    margin: 0.4in;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  html, body, #root {
+    background: #ffffff !important;
+    color: #101010 !important;
+  }
+  .print-hide { display: none !important; }
+  .print-card { box-shadow: none !important; }
+  .print-page { break-after: page; }
+  .print-page:last-of-type { break-after: auto; }
+  .print-batch-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.3in;
+  }
+  .card-grid {
+    background: #ffffff !important;
+    border-color: rgba(16, 16, 16, 0.18) !important;
+  }
+  .card-letter[data-tone="blue"] {
+    color: var(--brand-blue) !important;
+  }
+  .card-letter[data-tone="red"] {
+    color: var(--brand-red) !important;
+  }
+  .card-letter-blue, .card-letter-red {
+    text-shadow: none !important;
+  }
+  .card-cell {
+    background: #f8f9fb !important;
+    color: #101010 !important;
+    border-color: rgba(16, 16, 16, 0.16) !important;
+  }
+  .card-cell-blue {
+    background: rgba(14, 165, 233, 0.08) !important;
+    color: var(--brand-blue) !important;
+    border-color: rgba(14, 165, 233, 0.45) !important;
+  }
+  .card-cell-red {
+    background: rgba(239, 68, 68, 0.08) !important;
+    color: var(--brand-red) !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+  }
+  .card-cell[data-tone="blue"] {
+    background: rgba(14, 165, 233, 0.14) !important;
+    color: var(--brand-blue) !important;
+    border-color: rgba(14, 165, 233, 0.55) !important;
+  }
+  .card-cell[data-tone="red"] {
+    background: rgba(239, 68, 68, 0.14) !important;
+    color: var(--brand-red) !important;
+    border-color: rgba(239, 68, 68, 0.55) !important;
+  }
+  .card-cell-free {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: var(--brand-red) !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+  }
+  .card-cell-marked {
+    box-shadow: none !important;
+    border-color: rgba(14, 165, 233, 0.6) !important;
+  }
+}

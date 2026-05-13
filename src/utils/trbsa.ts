@@ -1,5 +1,7 @@
 export const LETTERS = ['T', 'R', 'B', 'S', 'A'] as const;
 export type TrbsaLetter = (typeof LETTERS)[number];
+export type CardCell = number | 'FREE';
+export type TrbsaCard = CardCell[][];
 
 export const LETTER_COLOR: Record<TrbsaLetter, 'blue' | 'red'> = {
   T: 'blue',
@@ -31,7 +33,7 @@ export function createShuffledDeck(): number[] {
 }
 
 /** Build a random 5x5 TRBSA card (columns = T,R,B,S,A) with FREE SPACE at center. */
-export function createRandomCard(): (number | 'FREE')[][] {
+export function createRandomCard(): TrbsaCard {
   // columns: each column draws from its letter's range, 5 unique numbers
   const ranges: Record<TrbsaLetter, [number, number]> = {
     T: [1, 15],
@@ -61,4 +63,58 @@ export function createRandomCard(): (number | 'FREE')[][] {
     rows.push(row);
   }
   return rows;
+}
+
+const COLUMN_RANGES: Array<[number, number]> = [
+  [1, 15],
+  [16, 30],
+  [31, 45],
+  [46, 60],
+  [61, 75]
+];
+
+export function isTrbsaCard(value: unknown): value is TrbsaCard {
+  if (!Array.isArray(value) || value.length !== 5) return false;
+  const seenNumbers = new Set<number>();
+  for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
+    const row = value[rowIndex];
+    if (!Array.isArray(row) || row.length !== 5) return false;
+    for (let colIndex = 0; colIndex < 5; colIndex++) {
+      const cell = row[colIndex];
+      if (cell === 'FREE') {
+        if (rowIndex !== 2 || colIndex !== 2) return false;
+        continue;
+      }
+      if (typeof cell !== 'number' || !Number.isInteger(cell)) return false;
+      const [lo, hi] = COLUMN_RANGES[colIndex];
+      if (cell < lo || cell > hi) return false;
+      if (seenNumbers.has(cell)) return false;
+      seenNumbers.add(cell);
+    }
+  }
+  return true;
+}
+
+export function serializeCard(card: TrbsaCard): string {
+  return card.flat().join('-');
+}
+
+export function createUniqueCards(count: number): TrbsaCard[] {
+  const cards: TrbsaCard[] = [];
+  const seen = new Set<string>();
+  let attempts = 0;
+  const maxAttempts = Math.max(200, count * 120);
+  while (cards.length < count && attempts < maxAttempts) {
+    const card = createRandomCard();
+    const key = serializeCard(card);
+    if (!seen.has(key)) {
+      seen.add(key);
+      cards.push(card);
+    }
+    attempts += 1;
+  }
+  if (cards.length !== count) {
+    throw new Error('Unable to generate unique cards. Try again.');
+  }
+  return cards;
 }
