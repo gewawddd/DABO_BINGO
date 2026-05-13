@@ -1,0 +1,60 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+:root {
+  --bg-base: #07090f;
+  --bg-elevated: #0d1220;
+  --brand-blue: #0ea5e9;
+  --brand-blue-deep: #0284c7;
+  --brand-red: #ef4444;
+  --brand-red-deep: #dc2626;
+}
+html, body, #root {
+  height: 100%;
+  background: var(--bg-base);
+  color: #e6edf7;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background:
+    radial-gradient(1200px 700px at 18% -10%, rgba(14, 165, 233, 0.10), transparent 60%),
+    radial-gradient(900px 600px at 95% 110%, rgba(239, 68, 68, 0.08), transparent 60%),
+    var(--bg-base);
+}
+.font-display {
+  font-family: 'Oswald', 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+}
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.glass-blue {
+  background: linear-gradient(180deg, rgba(14, 165, 233, 0.10), rgba(14, 165, 233, 0.02));
+  border: 1px solid rgba(14, 165, 233, 0.25);
+}
+.glow-blue {
+  box-shadow:
+    0 0 0 1px rgba(14, 165, 233, 0.55) inset,
+    0 0 18px rgba(14, 165, 233, 0.55),
+    0 0 42px rgba(14, 165, 233, 0.35);
+}
+.glow-red {
+  box-shadow:
+    0 0 0 2px rgba(239, 68, 68, 0.85) inset,
+    0 0 22px rgba(239, 68, 68, 0.65),
+    0 0 56px rgba(239, 68, 68, 0.45);
+}
+/* hide scrollbar in call history strip */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
