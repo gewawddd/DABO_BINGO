@@ -17,28 +17,36 @@ export function App() {
   const [autoInterval, setAutoInterval] = useState(5);
   const [winnerOpen, setWinnerOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const winnerAudioRef = useRef<{ claps?: HTMLAudioElement; cheer?: HTMLAudioElement }>({});
+  const winnerAudioRef = useRef<{ crowd?: HTMLAudioElement; fireworks?: HTMLAudioElement; confetti?: HTMLAudioElement }>({});
   const playWinnerSounds = useCallback(() => {
-    const claps = winnerAudioRef.current.claps ??
-      new Audio('/hitslab-clapping-typography-video-music-460582.mp3');
-    const cheer = winnerAudioRef.current.cheer ??
-      new Audio('/hitslab-cheerful-whistle-cute-music-337621.mp3');
-    claps.volume = 0.7;
-    cheer.volume = 0.6;
-    claps.loop = true;
-    cheer.loop = true;
-    winnerAudioRef.current = { claps, cheer };
-    claps.currentTime = 0;
-    cheer.currentTime = 0;
-    claps.play().catch(() => undefined);
-    cheer.play().catch(() => undefined);
+    const crowd = winnerAudioRef.current.crowd ??
+      new Audio('/freesound_community-cheering-and-clapping-crowd-1-5995.mp3');
+    const fireworks = winnerAudioRef.current.fireworks ??
+      new Audio('/dragon-studio-fireworks-07-419025.mp3');
+    const confetti = winnerAudioRef.current.confetti ??
+      new Audio('/u_jspnqv1glx-1gift-confetti-447240.mp3');
+    crowd.volume = 0.75;
+    fireworks.volume = 0.55;
+    confetti.volume = 0.45;
+    crowd.loop = true;
+    fireworks.loop = true;
+    confetti.loop = true;
+    winnerAudioRef.current = { crowd, fireworks, confetti };
+    crowd.currentTime = 0;
+    fireworks.currentTime = 0;
+    confetti.currentTime = 0;
+    crowd.play().catch(() => undefined);
+    fireworks.play().catch(() => undefined);
+    confetti.play().catch(() => undefined);
   }, []);
   const stopWinnerSounds = useCallback(() => {
-    const { claps, cheer } = winnerAudioRef.current;
-    claps?.pause();
-    cheer?.pause();
-    if (claps) claps.currentTime = 0;
-    if (cheer) cheer.currentTime = 0;
+    const { crowd, fireworks, confetti } = winnerAudioRef.current;
+    crowd?.pause();
+    fireworks?.pause();
+    confetti?.pause();
+    if (crowd) crowd.currentTime = 0;
+    if (fireworks) fireworks.currentTime = 0;
+    if (confetti) confetti.currentTime = 0;
   }, []);
   useEffect(() => {
     if (!soundOn) stopWinnerSounds();
