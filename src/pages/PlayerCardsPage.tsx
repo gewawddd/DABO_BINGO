@@ -76,7 +76,7 @@ export function PlayerCardsPage() {
             <Link
               to="/playercards/print"
               className="w-full sm:w-auto rounded-xl border border-brand-green/50 bg-brand-green/15 px-4 py-2 text-xs uppercase tracking-[0.35em] text-brand-green hover:bg-brand-green/25 text-center">
-              Print 14 Cards
+              Print 30 Cards
             </Link>
           </div>
         </header>
