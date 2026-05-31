@@ -198,13 +198,13 @@ html:fullscreen .app-main {
 
 @media print {
   @page {
-    size: 21cm 29.7cm;
-    margin: 0.4cm;
+    size: 8.5in 11in;
+    margin: 0.2in;
   }
   :root {
-    --print-page-width: 21cm;
-    --print-page-height: 29.7cm;
-    --print-page-margin: 0.4cm;
+    --print-page-width: 8.5in;
+    --print-page-height: 11in;
+    --print-page-margin: 0.2in;
     --print-card-width: 8.8cm;
     --print-card-height: 11.5cm;
     --print-card-gap: 0.35cm;
