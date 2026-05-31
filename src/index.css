@@ -194,17 +194,20 @@ html:fullscreen .app-main {
 .print-hide { display: block; }
 .print-card { box-shadow: none; }
 .print-page { break-after: auto; }
-.print-batch-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.print-batch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 @media print {
   @page {
-    size: 8.5in 13in;
-    margin: 0.03in;
+    size: 21cm 29.7cm;
+    margin: 0.4cm;
   }
   :root {
-    --print-page-width: 8.5in;
-    --print-page-height: 13in;
-    --print-page-margin: 0.03in;
+    --print-page-width: 21cm;
+    --print-page-height: 29.7cm;
+    --print-page-margin: 0.4cm;
+    --print-card-width: 8.8cm;
+    --print-card-height: 11.5cm;
+    --print-card-gap: 0.35cm;
   }
   * {
     -webkit-print-color-adjust: exact;
@@ -220,7 +223,8 @@ html:fullscreen .app-main {
     gap: 0.02in;
     break-inside: avoid;
     page-break-inside: avoid;
-    height: 100%;
+    width: var(--print-card-width);
+    height: var(--print-card-height);
     justify-content: space-between;
   }
   .print-card-meta {
@@ -270,10 +274,12 @@ html:fullscreen .app-main {
     background: transparent !important;
   }
   .print-batch-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    grid-template-rows: repeat(3, minmax(0, 1fr));
-    grid-auto-rows: 1fr;
-    gap: 0.025in;
+    grid-template-columns: repeat(2, var(--print-card-width)) !important;
+    grid-template-rows: repeat(2, var(--print-card-height));
+    grid-auto-rows: var(--print-card-height);
+    gap: var(--print-card-gap);
+    justify-content: center;
+    align-content: center;
     height: 100%;
   }
   .print-page { break-after: page; }

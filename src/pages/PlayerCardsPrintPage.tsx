@@ -6,7 +6,7 @@ import { createUniqueCards, isTrbsaCard, type TrbsaCard } from '../utils/trbsa';
 
 const STORAGE_KEY = 'trbsa-player-cards-batch-v1';
 const CARD_COUNT = 30;
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 4;
 
 function loadStoredCards(): TrbsaCard[] | null {
   if (typeof window === 'undefined') return null;
@@ -68,7 +68,7 @@ export function PlayerCardsPrintPage() {
           <div className="flex flex-col gap-3">
             <Logo size="lg" showTag={false} />
             <div className="text-sm sm:text-base text-white/70">
-              Print {CARD_COUNT} unique player cards on long bond paper. Each page fits {PAGE_SIZE} cards.
+              Print {CARD_COUNT} unique player cards on A4 paper. Each page fits {PAGE_SIZE} cards at 8.8cm x 11.5cm.
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/30 bg-amber-200/10 px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-amber-100/80">
               Live Room Print Studio
@@ -161,7 +161,7 @@ export function PlayerCardsPrintPage() {
               <section
                 key={`page-${pageIndex}`}
                 className="print-page rounded-3xl border border-white/10 bg-white/[0.03] p-4 sm:p-6">
-                <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 print-batch-grid">
+                <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 print-batch-grid">
                   {filledCards.map((card, cardIndex) => {
                     const cardNumber = pageIndex * PAGE_SIZE + cardIndex + 1;
                     const cardId = String(cardNumber).padStart(3, '0');
