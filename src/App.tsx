@@ -77,7 +77,8 @@ export function App() {
   useKeyboardShortcuts({
     onNext: game.next,
     onReset: game.reset,
-    onFullscreen: handleFullscreen
+    onFullscreen: handleFullscreen,
+    onOpenWinner: handleOpenWinner
   });
   return (
     <div className="app-shell flex w-full min-h-screen bg-brand-bg text-white">
@@ -132,6 +133,13 @@ export function App() {
             <span>
               <span className="text-white/70">R</span> · Reset
             </span>
+            <button
+              type="button"
+              onClick={handleOpenWinner}
+              aria-label="Open winner modal"
+              className="transition-colors hover:text-white/80">
+              <span className="text-white/70">W</span> · Winner
+            </button>
             <span>
               <span className="text-white/70">F</span> · Fullscreen
             </span>

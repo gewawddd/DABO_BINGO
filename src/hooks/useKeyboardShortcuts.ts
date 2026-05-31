@@ -4,12 +4,14 @@ interface Handlers {
   onNext: () => void;
   onReset: () => void;
   onFullscreen: () => void;
+  onOpenWinner?: () => void;
 }
 
 export function useKeyboardShortcuts({
   onNext,
   onReset,
-  onFullscreen
+  onFullscreen,
+  onOpenWinner
 }: Handlers) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -29,9 +31,11 @@ export function useKeyboardShortcuts({
         onReset();
       } else if (e.key === 'f' || e.key === 'F') {
         onFullscreen();
+      } else if (e.key === 'w' || e.key === 'W') {
+        onOpenWinner?.();
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [onNext, onReset, onFullscreen]);
+  }, [onNext, onReset, onFullscreen, onOpenWinner]);
 }
